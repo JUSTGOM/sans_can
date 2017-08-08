@@ -42,3 +42,9 @@ Topic
 		float32 VEL_N
 		float32 VEL_E
 		float32 VEL_D
+		float32 COMP_ACC_X
+		float32 COMP_ACC_Y
+		float32 COMP_ACC_Z
+		float32 COMP_GYRO_X
+		float32 COMP_GYRO_Y
+		float32 COMP_GYRO_Z
