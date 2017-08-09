@@ -124,8 +124,6 @@ public :
             case 0x002 :
                 
 
-                can_msg_rtk.header.stamp = ros::Time::now();
-
                 can_msg_rtk.WGS84_Alt = big32(&message.DATA[0])/1000.0;
                 temp = big32(&message.DATA[4]);
                 memcpy(&can_msg_rtk.NED_N, &temp, sizeof(float));
@@ -136,8 +134,6 @@ public :
 
             case 0x003 :
                 
-
-                can_msg_rtk.header.stamp = ros::Time::now();
 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_rtk.NED_E, &temp, sizeof(float));
@@ -151,7 +147,6 @@ public :
                 break;
 
             case 0x004 :
-                can_msg_rtk.header.stamp = ros::Time::now();
 
                 can_msg_rtk.Hori_Accuracy = big32(&message.DATA[0])/10000.0;
                 can_msg_rtk.Vert_Accuracy = big32(&message.DATA[4])/10000.0;
@@ -161,7 +156,6 @@ public :
                 break;
 
             case 0x005 :
-                can_msg_rtk.header.stamp = ros::Time::now();
 
                 can_msg_rtk.FixType = message.DATA[0];
                 can_msg_rtk.Flags = message.DATA[1];
@@ -170,6 +164,8 @@ public :
                 bitFlagM8P |= 0x10;
 
                 break;
+
+
 
             case 0x011 :
                 
@@ -188,9 +184,6 @@ public :
 
             case 0x012 :
                 
-
-                can_msg_vn300.header.stamp = ros::Time::now();
-
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.YAW, &temp, sizeof(float));
 
@@ -203,10 +196,6 @@ public :
 
             case 0x013 :
                 
-
-
-                can_msg_vn300.header.stamp = ros::Time::now();
-
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.Uncertain_PITCH, &temp, sizeof(float));
 
@@ -219,7 +208,6 @@ public :
 
             case 0x014 :
             
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big64(&message.DATA[0]);
                 memcpy(&can_msg_vn300.WGS84_Lat, &temp, sizeof(double));
@@ -229,7 +217,6 @@ public :
 
             case 0x015 :
             
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big64(&message.DATA[0]);
                 memcpy(&can_msg_vn300.WGS84_Lon, &temp, sizeof(double));
@@ -239,7 +226,6 @@ public :
 
             case 0x016 :
             
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big64(&message.DATA[0]);
                 memcpy(&can_msg_vn300.WGS84_Alt, &temp, sizeof(double));
@@ -249,7 +235,6 @@ public :
 
             case 0x017 :
                 
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.NED_N, &temp, sizeof(float));
@@ -263,7 +248,6 @@ public :
 
             case 0x018 :
                 
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.NED_D, &temp, sizeof(float));
@@ -277,8 +261,6 @@ public :
 
             case 0x019 :
                 
-                can_msg_vn300.header.stamp = ros::Time::now();
-
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.VEL_E, &temp, sizeof(float));
 
@@ -292,8 +274,6 @@ public :
 
             case 0x020 :
                 
-                can_msg_vn300.header.stamp = ros::Time::now();
-
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.COMP_ACC_X, &temp, sizeof(float));
 
@@ -307,7 +287,6 @@ public :
 
             case 0x021 :
                 
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.COMP_ACC_Z, &temp, sizeof(float));
@@ -322,7 +301,6 @@ public :
 
             case 0x022 :
                 
-                can_msg_vn300.header.stamp = ros::Time::now();
 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.COMP_GYRO_Y, &temp, sizeof(float));
@@ -345,7 +323,7 @@ public :
                 can_pub1.publish(can_msg_rtk);
             }
 
-            if (bitFlagVN300 = 0x0FFF)
+            if (bitFlagVN300 == 0x0FFF)
             {
                 bitFlagVN300 = 0x0000;
                 can_pub2.publish(can_msg_vn300);
