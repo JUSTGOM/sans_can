@@ -12,13 +12,6 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
-#define DWORD  __u32
-#define WORD   unsigned short
-#define BYTE   unsigned char
-#define LPSTR  char*
-/* A simple SocketCAN example */
-
-
 class CANNode {
 
 
