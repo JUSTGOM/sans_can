@@ -105,7 +105,11 @@ public :
             switch(message.ID)
             {
             case 0x001 :
-                can_msg_rtk.header.stamp = ros::Time::now();
+
+                if (can_msg_rtk.header.stamp == 0) 
+                {
+                    can_msg_rtk.header.stamp = ros::Time::now();
+                }
 
                 can_msg_rtk.WGS84_Lat = big32(&message.DATA[0])/10000000.0;
                 can_msg_rtk.WGS84_Lon = big32(&message.DATA[4])/10000000.0;
@@ -115,6 +119,11 @@ public :
                 break;
 
             case 0x002 :
+
+                if (can_msg_rtk.header.stamp == 0) 
+                {
+                    can_msg_rtk.header.stamp = ros::Time::now();
+                }
                 
 
                 can_msg_rtk.WGS84_Alt = big32(&message.DATA[0])/1000.0;
@@ -126,6 +135,11 @@ public :
                 break;
 
             case 0x003 :
+
+                if (can_msg_rtk.header.stamp == 0) 
+                {
+                    can_msg_rtk.header.stamp = ros::Time::now();
+                }
                 
 
                 temp = big32(&message.DATA[0]);
@@ -141,6 +155,11 @@ public :
 
             case 0x004 :
 
+                if (can_msg_rtk.header.stamp == 0) 
+                {
+                    can_msg_rtk.header.stamp = ros::Time::now();
+                }
+
                 can_msg_rtk.Hori_Accuracy = big32(&message.DATA[0])/10000.0;
                 can_msg_rtk.Vert_Accuracy = big32(&message.DATA[4])/10000.0;
 
@@ -149,6 +168,11 @@ public :
                 break;
 
             case 0x005 :
+
+                if (can_msg_rtk.header.stamp == 0) 
+                {
+                    can_msg_rtk.header.stamp = ros::Time::now();
+                }
 
                 can_msg_rtk.FixType = message.DATA[0];
                 can_msg_rtk.Flags = message.DATA[1];
@@ -161,10 +185,12 @@ public :
 
 
             case 0x011 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
-
-                can_msg_vn300.header.stamp = ros::Time::now();
-
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.ROLL, &temp, sizeof(float));
 
@@ -176,6 +202,11 @@ public :
                 break;
 
             case 0x012 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.YAW, &temp, sizeof(float));
@@ -188,6 +219,11 @@ public :
                 break;
 
             case 0x013 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.Uncertain_PITCH, &temp, sizeof(float));
@@ -200,6 +236,11 @@ public :
                 break;
 
             case 0x014 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
             
 
                 temp = big64(&message.DATA[0]);
@@ -209,6 +250,11 @@ public :
                 break;
 
             case 0x015 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
             
 
                 temp = big64(&message.DATA[0]);
@@ -218,6 +264,11 @@ public :
                 break;
 
             case 0x016 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
             
 
                 temp = big64(&message.DATA[0]);
@@ -227,6 +278,11 @@ public :
                 break;
 
             case 0x017 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
 
                 temp = big32(&message.DATA[0]);
@@ -240,6 +296,11 @@ public :
                 break;
 
             case 0x018 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
 
                 temp = big32(&message.DATA[0]);
@@ -253,6 +314,11 @@ public :
                 break;
 
             case 0x019 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.VEL_E, &temp, sizeof(float));
@@ -266,6 +332,11 @@ public :
                 break;
 
             case 0x020 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
                 temp = big32(&message.DATA[0]);
                 memcpy(&can_msg_vn300.COMP_ACC_X, &temp, sizeof(float));
@@ -279,6 +350,11 @@ public :
                 break;
 
             case 0x021 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
 
                 temp = big32(&message.DATA[0]);
@@ -293,6 +369,11 @@ public :
                 break;
 
             case 0x022 :
+
+                if (can_msg_vn300.header.stamp == 0) 
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
                 
 
                 temp = big32(&message.DATA[0]);
@@ -314,12 +395,14 @@ public :
             {
                 bitFlagM8P = 0x00;
                 can_pub1.publish(can_msg_rtk);
+                can_msg_rtk.header.stamp = 0;
             }
 
             if (bitFlagVN300 == 0x0FFF)
             {
                 bitFlagVN300 = 0x0000;
                 can_pub2.publish(can_msg_vn300);
+                can_msg_vn300.header.stamp = 0;
             }
 
 
