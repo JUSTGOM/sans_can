@@ -14,7 +14,6 @@
 
 class CANNode {
 
-
 public :
     ros::NodeHandle nh;
     ros::Publisher can_pub1;
@@ -89,6 +88,10 @@ public :
         TPCANMsg message;
         uint32_t temp = 0x00;
 
+        ros::Time bf_rtk = ros::Time::now(), bf_vn300 = ros::Time::now();
+
+
+
         static uint8_t bitFlagM8P = 0x00;
         static uint16_t bitFlagVN300 = 0x0000;
         // ================== end mapping ==================
@@ -106,7 +109,7 @@ public :
             {
             case 0x001 :
 
-                if (can_msg_rtk.header.stamp == 0) 
+                if (can_msg_rtk.header.stamp == bf_rtk)
                 {
                     can_msg_rtk.header.stamp = ros::Time::now();
                 }
@@ -120,7 +123,7 @@ public :
 
             case 0x002 :
 
-                if (can_msg_rtk.header.stamp == 0) 
+                if (can_msg_rtk.header.stamp == bf_rtk)
                 {
                     can_msg_rtk.header.stamp = ros::Time::now();
                 }
@@ -136,7 +139,7 @@ public :
 
             case 0x003 :
 
-                if (can_msg_rtk.header.stamp == 0) 
+                if (can_msg_rtk.header.stamp == bf_rtk)
                 {
                     can_msg_rtk.header.stamp = ros::Time::now();
                 }
@@ -155,7 +158,7 @@ public :
 
             case 0x004 :
 
-                if (can_msg_rtk.header.stamp == 0) 
+                if (can_msg_rtk.header.stamp == bf_rtk)
                 {
                     can_msg_rtk.header.stamp = ros::Time::now();
                 }
@@ -169,7 +172,7 @@ public :
 
             case 0x005 :
 
-                if (can_msg_rtk.header.stamp == 0) 
+                if (can_msg_rtk.header.stamp == bf_rtk)
                 {
                     can_msg_rtk.header.stamp = ros::Time::now();
                 }
@@ -186,7 +189,7 @@ public :
 
             case 0x011 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -203,7 +206,7 @@ public :
 
             case 0x012 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -220,7 +223,7 @@ public :
 
             case 0x013 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -237,7 +240,7 @@ public :
 
             case 0x014 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -251,7 +254,7 @@ public :
 
             case 0x015 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -265,7 +268,7 @@ public :
 
             case 0x016 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -279,7 +282,7 @@ public :
 
             case 0x017 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -297,7 +300,7 @@ public :
 
             case 0x018 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -315,7 +318,7 @@ public :
 
             case 0x019 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -333,7 +336,7 @@ public :
 
             case 0x020 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -351,7 +354,7 @@ public :
 
             case 0x021 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -370,7 +373,7 @@ public :
 
             case 0x022 :
 
-                if (can_msg_vn300.header.stamp == 0) 
+                if (can_msg_vn300.header.stamp == bf_vn300)
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
@@ -395,14 +398,14 @@ public :
             {
                 bitFlagM8P = 0x00;
                 can_pub1.publish(can_msg_rtk);
-                can_msg_rtk.header.stamp = 0;
+                can_msg_rtk.header.stamp = bf_rtk;
             }
 
             if (bitFlagVN300 == 0x0FFF)
             {
                 bitFlagVN300 = 0x0000;
                 can_pub2.publish(can_msg_vn300);
-                can_msg_vn300.header.stamp = 0;
+                can_msg_vn300.header.stamp = bf_vn300;
             }
 
 
@@ -442,6 +445,6 @@ int main(int argc, char* argv[])
     ros::NodeHandle nh;
     CANNode kn(nh);
     ros::spin();
-	return 0;
+    return 0;
 }
 
