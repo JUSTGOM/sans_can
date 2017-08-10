@@ -488,7 +488,39 @@ public :
                 
                 break;
 
+            case 0x033 :
 
+                if (can_msg_bestpos.header.stamp == bf_bestpos)
+                {
+                    can_msg_bestpos.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_bestpos.STD_DEV_LAT, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_bestpos.STD_DEV_LON, &temp, sizeof(float));
+
+                bitFlagBESTPOS |= 0x08;
+                
+                break;
+
+            case 0x034 :
+
+                if (can_msg_bestpos.header.stamp == bf_bestpos)
+                {
+                    can_msg_bestpos.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_bestpos.STD_DEV_ALT, &temp, sizeof(float));
+
+                can_msg_bestpos.POSTYPE = big32(&message.DATA[4]);
+
+
+                bitFlagBESTPOS |= 0x10;
+                
+                break;
 
             }
 
@@ -506,7 +538,7 @@ public :
                 can_msg_vn300.header.stamp = bf_vn300;
             }
 
-            if (bitFlagBESTPOS == 0x07)
+            if (bitFlagBESTPOS == 0x1F)
             {
                 bitFlagBESTPOS = 0x00;
                 can_pub3.publish(can_msg_bestpos);
