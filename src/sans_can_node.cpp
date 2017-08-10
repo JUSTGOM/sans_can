@@ -509,7 +509,7 @@ public :
             if (bitFlagBESTPOS == 0x07)
             {
                 bitFlagBESTPOS = 0x00;
-                can_pub3.pulish(can_msg_bestpos);
+                can_pub3.publish(can_msg_bestpos);
                 can_msg_vn300.header.stamp = bf_bestpos;
             }
 
