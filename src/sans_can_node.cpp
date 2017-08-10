@@ -439,7 +439,7 @@ public :
 
             case 0x030 :
 
-                if (can_msg_bestpos.header.stamp == bf_vn300)
+                if (can_msg_bestpos.header.stamp == bf_bestpos)
                 {
                     can_msg_bestpos.header.stamp = ros::Time::now();
                 }
@@ -456,7 +456,7 @@ public :
 
             case 0x031 :
 
-                if (can_msg_bestpos.header.stamp == bf_vn300)
+                if (can_msg_bestpos.header.stamp == bf_bestpos)
                 {
                     can_msg_bestpos.header.stamp = ros::Time::now();
                 }
@@ -473,7 +473,7 @@ public :
 
             case 0x032 :
 
-                if (can_msg_bestpos.header.stamp == bf_vn300)
+                if (can_msg_bestpos.header.stamp == bf_bestpos)
                 {
                     can_msg_bestpos.header.stamp = ros::Time::now();
                 }
@@ -510,7 +510,7 @@ public :
             {
                 bitFlagBESTPOS = 0x00;
                 can_pub3.publish(can_msg_bestpos);
-                can_msg_vn300.header.stamp = bf_bestpos;
+                can_msg_bestpos.header.stamp = bf_bestpos;
             }
 
 
