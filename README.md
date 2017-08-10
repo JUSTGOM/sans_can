@@ -1,17 +1,12 @@
 sans_can Messages
 
-Modified Date : 2017. 08. 08.
-
-
-#include "sans_can/sans_can_msgs_rtk.h"
-#include "sans_can/sans_can_msgs_vn300.h"
-#include "sans_can/sans_can_msgs_bestpos.h"
-
-
-
+Modified Date : 2017. 08. 10.
+ 
 Topic
 
 #1 	sans_can_msg_rtk
+
+	#include "sans_can/sans_can_msgs_rtk.h"
 
 		Header header
 		float32 WGS84_Lat
@@ -29,6 +24,7 @@ Topic
 
 #2 	sans_can_msg_vn300
 
+	#include "sans_can/sans_can_msgs_vn300.h"
 
 		float32 ROLL
 		float32 PITCH
@@ -36,9 +32,9 @@ Topic
 		float32 Uncertain_ROLL
 		float32 Uncertain_PITCH
 		float32 Uncertain_YAW
-		float64 WGS84_Lat
-		float64 WGS84_Lon
-		float64 WGS84_Alt
+		float32 WGS84_Lat
+		float32 WGS84_Lon
+		float32 WGS84_Alt
 		float32 NED_N
 		float32 NED_E
 		float32 NED_D
@@ -51,3 +47,25 @@ Topic
 		float32 COMP_GYRO_X
 		float32 COMP_GYRO_Y
 		float32 COMP_GYRO_Z
+		float32 UNCOMP_ACC_X
+		float32 UNCOMP_ACC_Y
+		float32 UNCOMP_ACC_Z
+		float32 UNCOMP_GYRO_X
+		float32 UNCOMP_GYRO_Y
+		float32 UNCOMP_GYRO_Z
+
+
+#2 	sans_can_msgs_bestpos 		[novatel]
+
+	#include "sans_can/sans_can_msgs_bestpos.h"
+
+		float32 WGS84_Lat
+		float32 WGS84_Lon
+		float32 WGS84_Alt
+		float32 NED_N
+		float32 NED_E
+		float32 NED_D
+		float32 STD_DEV_LAT
+		float32 STD_DEV_LON
+		float32 STD_DEV_ALT
+		uint32 POSTYPE
