@@ -5,6 +5,7 @@ Modified Date : 2017. 08. 08.
 
 #include "sans_can/sans_can_msgs_rtk.h"
 #include "sans_can/sans_can_msgs_vn300.h"
+#include "sans_can/sans_can_msgs_bestpos.h"
 
 
 
