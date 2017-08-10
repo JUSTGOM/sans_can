@@ -15,6 +15,7 @@ add_message_files(
   FILES
   sans_can_msgs_rtk.msg
   sans_can_msgs_vn300.msg
+  sans_can_msgs_bestpos.msg
 )
 
 generate_messages(

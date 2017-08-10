@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "sans_can/sans_can_msgs_rtk.h"
 #include "sans_can/sans_can_msgs_vn300.h"
+#include "sans_can/sans_can_msgs_bestpos.h"
 #include <PCANBasic.h>
 #include <boost/thread.hpp>
 
@@ -18,6 +19,8 @@ public :
     ros::NodeHandle nh;
     ros::Publisher can_pub1;
     ros::Publisher can_pub2;
+    ros::Publisher can_pub3;
+
 
     inline uint16_t big16(uint8_t *c)
     {
@@ -88,12 +91,11 @@ public :
         TPCANMsg message;
         uint32_t temp = 0x00;
 
-        ros::Time bf_rtk = ros::Time::now(), bf_vn300 = ros::Time::now();
+        ros::Time bf_rtk = ros::Time::now(), bf_vn300 = ros::Time::now(), bf_bestpos = ros::Time::now();
 
-
-
-        static uint8_t bitFlagM8P = 0x00;
+        static uint8_t  bitFlagM8P = 0x00;
         static uint16_t bitFlagVN300 = 0x0000;
+        static uint8_t  bitFlagBESTPOS = 0x00;
         // ================== end mapping ==================
 
         // PCAN spin
@@ -107,6 +109,7 @@ public :
 
             switch(message.ID)
             {
+
             case 0x001 :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
@@ -185,6 +188,8 @@ public :
 
                 break;
 
+            /** @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+
 
 
             case 0x011 :
@@ -244,10 +249,12 @@ public :
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
-            
 
-                temp = big64(&message.DATA[0]);
-                memcpy(&can_msg_vn300.WGS84_Lat, &temp, sizeof(double));
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.WGS84_Lat, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.WGS84_Lon, &temp, sizeof(float));
 
                 bitFlagVN300 |= 0x0008;
                 break;
@@ -259,9 +266,11 @@ public :
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
             
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.WGS84_Alt, &temp, sizeof(float));
 
-                temp = big64(&message.DATA[0]);
-                memcpy(&can_msg_vn300.WGS84_Lon, &temp, sizeof(double));
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.NED_N, &temp, sizeof(float));
 
                 bitFlagVN300 |= 0x0010;
                 break;
@@ -272,10 +281,12 @@ public :
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
-            
 
-                temp = big64(&message.DATA[0]);
-                memcpy(&can_msg_vn300.WGS84_Alt, &temp, sizeof(double));
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.NED_E, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.NED_D, &temp, sizeof(float));
 
                 bitFlagVN300 |= 0x0020;
                 break;
@@ -287,13 +298,12 @@ public :
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
                 
-
                 temp = big32(&message.DATA[0]);
-                memcpy(&can_msg_vn300.NED_N, &temp, sizeof(float));
+                memcpy(&can_msg_vn300.VEL_N, &temp, sizeof(float));
 
 
                 temp = big32(&message.DATA[4]);
-                memcpy(&can_msg_vn300.NED_E, &temp, sizeof(float));
+                memcpy(&can_msg_vn300.VEL_E, &temp, sizeof(float));
 
                 bitFlagVN300 |= 0x0040;
                 break;
@@ -304,37 +314,15 @@ public :
                 {
                     can_msg_vn300.header.stamp = ros::Time::now();
                 }
-                
 
                 temp = big32(&message.DATA[0]);
-                memcpy(&can_msg_vn300.NED_D, &temp, sizeof(float));
+                memcpy(&can_msg_vn300.VEL_D, &temp, sizeof(float));
 
-
-                temp = big32(&message.DATA[4]);
-                memcpy(&can_msg_vn300.VEL_N, &temp, sizeof(float));
 
                 bitFlagVN300 |= 0x0080;
                 break;
 
             case 0x019 :
-
-                if (can_msg_vn300.header.stamp == bf_vn300)
-                {
-                    can_msg_vn300.header.stamp = ros::Time::now();
-                }
-                
-                temp = big32(&message.DATA[0]);
-                memcpy(&can_msg_vn300.VEL_E, &temp, sizeof(float));
-
-
-                temp = big32(&message.DATA[4]);
-                memcpy(&can_msg_vn300.VEL_D, &temp, sizeof(float));
-
-                bitFlagVN300 |= 0x0100;
-                
-                break;
-
-            case 0x020 :
 
                 if (can_msg_vn300.header.stamp == bf_vn300)
                 {
@@ -348,11 +336,11 @@ public :
                 temp = big32(&message.DATA[4]);
                 memcpy(&can_msg_vn300.COMP_ACC_Y, &temp, sizeof(float));
 
-                bitFlagVN300 |= 0x0200;
+                bitFlagVN300 |= 0x0100;
                 
                 break;
 
-            case 0x021 :
+            case 0x01A :
 
                 if (can_msg_vn300.header.stamp == bf_vn300)
                 {
@@ -367,11 +355,11 @@ public :
                 temp = big32(&message.DATA[4]);
                 memcpy(&can_msg_vn300.COMP_GYRO_X, &temp, sizeof(float));
 
-                bitFlagVN300 |= 0x0400;
+                bitFlagVN300 |= 0x0200;
                 
                 break;
 
-            case 0x022 :
+            case 0x01B :
 
                 if (can_msg_vn300.header.stamp == bf_vn300)
                 {
@@ -386,7 +374,117 @@ public :
                 temp = big32(&message.DATA[4]);
                 memcpy(&can_msg_vn300.COMP_GYRO_Z, &temp, sizeof(float));
 
+                bitFlagVN300 |= 0x0400;
+                
+                break;
+
+
+            case 0x01C :
+
+                if (can_msg_vn300.header.stamp == bf_vn300)
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
+                
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.UNCOMP_ACC_X, &temp, sizeof(float));
+
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.UNCOMP_ACC_Y, &temp, sizeof(float));
+
                 bitFlagVN300 |= 0x0800;
+                
+                break;
+
+            case 0x01D :
+
+                if (can_msg_vn300.header.stamp == bf_vn300)
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
+                
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.UNCOMP_ACC_Z, &temp, sizeof(float));
+
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.UNCOMP_GYRO_X, &temp, sizeof(float));
+
+                bitFlagVN300 |= 0x1000;
+                
+                break;
+
+            case 0x01E :
+
+                if (can_msg_vn300.header.stamp == bf_vn300)
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
+                
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.UNCOMP_GYRO_Y, &temp, sizeof(float));
+
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.UNCOMP_GYRO_Z, &temp, sizeof(float));
+
+                bitFlagVN300 |= 0x2000;
+                
+                break;
+
+            /** @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+
+            case 0x030 :
+
+                if (can_msg_bestpos.header.stamp == bf_vn300)
+                {
+                    can_msg_bestpos.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_bestpos.WGS84_Lat, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_bestpos.WGS84_Lon, &temp, sizeof(float));
+
+                bitFlagBESTPOS |= 0x01;
+                
+                break;
+
+            case 0x031 :
+
+                if (can_msg_bestpos.header.stamp == bf_vn300)
+                {
+                    can_msg_bestpos.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_bestpos.WGS84_Alt, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_bestpos.NED_N, &temp, sizeof(float));
+
+                bitFlagBESTPOS |= 0x02;
+                
+                break;
+
+            case 0x032 :
+
+                if (can_msg_bestpos.header.stamp == bf_vn300)
+                {
+                    can_msg_bestpos.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_bestpos.NED_E, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_bestpos.NED_D, &temp, sizeof(float));
+
+                bitFlagBESTPOS |= 0x04;
                 
                 break;
 
@@ -401,11 +499,18 @@ public :
                 can_msg_rtk.header.stamp = bf_rtk;
             }
 
-            if (bitFlagVN300 == 0x0FFF)
+            if (bitFlagVN300 == 0x3FFF)
             {
                 bitFlagVN300 = 0x0000;
                 can_pub2.publish(can_msg_vn300);
                 can_msg_vn300.header.stamp = bf_vn300;
+            }
+
+            if (bitFlagBESTPOS == 0x07)
+            {
+                bitFlagBESTPOS = 0x00;
+                can_pub3.pulish(can_msg_bestpos);
+                can_msg_vn300.header.stamp = bf_bestpos;
             }
 
 
@@ -420,6 +525,7 @@ private :
     fd_set can_fds;
     sans_can::sans_can_msgs_rtk         can_msg_rtk;
     sans_can::sans_can_msgs_vn300       can_msg_vn300;
+    sans_can::sans_can_msgs_bestpos     can_msg_bestpos;
 
 public:
 
@@ -428,6 +534,7 @@ public:
     {
         can_pub1 = nh.advertise<sans_can::sans_can_msgs_rtk>("sans_can_msg_rtk", 1000);
         can_pub2 = nh.advertise<sans_can::sans_can_msgs_vn300>("sans_can_msg_vn300", 1000);
+        can_pub3 = nh.advertise<sans_can::sans_can_msgs_bestpos>("sans_can_msg_bestpos", 1000);
 
         InitCan(can_fd, can_fds, PCAN_USBBUS1);
 
