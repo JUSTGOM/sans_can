@@ -110,6 +110,8 @@ public :
             switch(message.ID)
             {
 
+
+            /** @C94-M8P Begin *///////////////////////////////////////////////////
             case 0x001 :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
@@ -188,10 +190,10 @@ public :
 
                 break;
 
-            /** @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+            /** @C94-M8P End *///////////////////////////////////////////////////
 
 
-
+            /** @VN-300 Begin *///////////////////////////////////////////////////        
             case 0x011 :
 
                 if (can_msg_vn300.header.stamp == bf_vn300)
@@ -435,8 +437,29 @@ public :
                 
                 break;
 
-            /** @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+            case 0x01F :
 
+                if (can_msg_vn300.header.stamp == bf_vn300)
+                {
+                    can_msg_vn300.header.stamp = ros::Time::now();
+                }
+                
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_vn300.TEMPRATURE, &temp, sizeof(float));
+
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_vn300.PRESSURE, &temp, sizeof(float));
+
+                bitFlagVN300 |= 0x4000;
+                
+                break;
+            /** @VN-300 End *///////////////////////////////////////////////////
+
+
+              
+            /** @Novatel Begin *///////////////////////////////////////////////////
             case 0x030 :
 
                 if (can_msg_bestpos.header.stamp == bf_bestpos)
@@ -523,6 +546,7 @@ public :
                 break;
 
             }
+            /** @Novatel End *///////////////////////////////////////////////////
 
             if (bitFlagM8P == 0x1F)
             {
@@ -531,7 +555,7 @@ public :
                 can_msg_rtk.header.stamp = bf_rtk;
             }
 
-            if (bitFlagVN300 == 0x3FFF)
+            if (bitFlagVN300 == 0x7FFF)
             {
                 bitFlagVN300 = 0x0000;
                 can_pub2.publish(can_msg_vn300);
