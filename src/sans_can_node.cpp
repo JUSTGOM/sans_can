@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "sans_can/sans_can_msgs_rtk.h"
+#include "sans_can/sans_can_msgs_sdins.h"
 #include "sans_can/sans_can_msgs_vn300.h"
 #include "sans_can/sans_can_msgs_bestpos.h"
 #include <PCANBasic.h>
@@ -20,6 +21,7 @@ public :
     ros::Publisher can_pub1;
     ros::Publisher can_pub2;
     ros::Publisher can_pub3;
+    ros::Publisher can_pub4;
 
 
     inline uint16_t big16(uint8_t *c)
@@ -91,11 +93,13 @@ public :
         TPCANMsg message;
         uint32_t temp = 0x00;
 
-        ros::Time bf_rtk = ros::Time::now(), bf_vn300 = ros::Time::now(), bf_bestpos = ros::Time::now();
+        ros::Time bf_rtk = ros::Time::now(), bf_vn300 = ros::Time::now(), bf_bestpos = ros::Time::now(), bf_sdins = ros::Time::now();
 
         static uint8_t  bitFlagM8P = 0x00;
         static uint16_t bitFlagVN300 = 0x0000;
         static uint8_t  bitFlagBESTPOS = 0x00;
+        static uint8_t  bitFlagSDINS = 0x00;
+
         // ================== end mapping ==================
 
         // PCAN spin
@@ -547,6 +551,59 @@ public :
 
             }
             /** @Novatel End *///////////////////////////////////////////////////
+            
+            /** @SDINS Begin *///////////////////////////////////////////////////
+            case 0x040 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_sdins.WGS84_Lat, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_sdins.WGS84_Lon, &temp, sizeof(float));
+
+                bitFlagSDINS |= 0x01;
+                
+                break;
+
+            case 0x041 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_sdins.WGS84_Alt, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_sdins.NED_N, &temp, sizeof(float));
+
+                bitFlagSDINS |= 0x02;
+                
+                break;
+
+            case 0x042 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_sdins.NED_E, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_sdins.NED_D, &temp, sizeof(float));
+
+                bitFlagSDINS |= 0x04;
+                
+                break;
+
 
             if (bitFlagM8P == 0x1F)
             {
@@ -569,6 +626,13 @@ public :
                 can_msg_bestpos.header.stamp = bf_bestpos;
             }
 
+            if ( bitFlagSDINS == 0x07)
+            {
+                bitFlagSDINS = 0x00;
+                can_pub4.publish(can_msg_sdins);
+                can_msg_sdins.header.stamp = bf_sdins;   
+
+            }
 
 
 
@@ -582,6 +646,7 @@ private :
     sans_can::sans_can_msgs_rtk         can_msg_rtk;
     sans_can::sans_can_msgs_vn300       can_msg_vn300;
     sans_can::sans_can_msgs_bestpos     can_msg_bestpos;
+    sans_can::sans_can_msgs_sdins       can_msg_sdins;
 
 public:
 
@@ -591,6 +656,7 @@ public:
         can_pub1 = nh.advertise<sans_can::sans_can_msgs_rtk>("sans_can_msg_rtk", 1000);
         can_pub2 = nh.advertise<sans_can::sans_can_msgs_vn300>("sans_can_msg_vn300", 1000);
         can_pub3 = nh.advertise<sans_can::sans_can_msgs_bestpos>("sans_can_msg_bestpos", 1000);
+        can_pub4 = nh.advertise<sans_can::sans_can_msgs_sdins>("sans_can_msg_sdins", 1000);
 
         InitCan(can_fd, can_fds, PCAN_USBBUS1);
 
