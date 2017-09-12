@@ -172,8 +172,8 @@ public :
                     can_msg_rtk.header.stamp = ros::Time::now();
                 }
 
-                can_msg_rtk.Hori_Accuracy = big32(&message.DATA[0])/10000.0;
-                can_msg_rtk.Vert_Accuracy = big32(&message.DATA[4])/10000.0;
+                can_msg_rtk.Hori_Accuracy = big32(&message.DATA[0])/1000.0;
+                can_msg_rtk.Vert_Accuracy = big32(&message.DATA[4])/1000.0;
 
                 bitFlagM8P |= 0x08;
 
