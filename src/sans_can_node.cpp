@@ -98,7 +98,7 @@ public :
         static uint8_t  bitFlagM8P = 0x00;
         static uint16_t bitFlagVN300 = 0x0000;
         static uint8_t  bitFlagBESTPOS = 0x00;
-        static uint8_t  bitFlagSDINS = 0x00;
+        static uint16_t bitFlagSDINS = 0x0000;
 
         // ================== end mapping ==================
 
@@ -549,6 +549,8 @@ public :
                 
                 break;
             /** @SDINS Begin *///////////////////////////////////////////////////
+
+
             case 0x040 :
 
                 if (can_msg_sdins.header.stamp == bf_sdins)
@@ -556,15 +558,14 @@ public :
                     can_msg_sdins.header.stamp = ros::Time::now();
                 }
 
-                temp = big32(&message.DATA[0]);
-                memcpy(&can_msg_sdins.WGS84_Lat, &temp, sizeof(float));
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.WGS84_Lat, &temp, sizeof(uint64_t));
 
-                temp = big32(&message.DATA[4]);
-                memcpy(&can_msg_sdins.WGS84_Lon, &temp, sizeof(float));
 
-                bitFlagSDINS |= 0x01;
+                bitFlagSDINS |= 0x0001;
                 
                 break;
+
 
             case 0x041 :
 
@@ -573,15 +574,15 @@ public :
                     can_msg_sdins.header.stamp = ros::Time::now();
                 }
 
-                temp = big32(&message.DATA[0]);
-                memcpy(&can_msg_sdins.WGS84_Alt, &temp, sizeof(float));
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.WGS84_Lon, &temp, sizeof(uint64_t));
 
-                temp = big32(&message.DATA[4]);
-                memcpy(&can_msg_sdins.NED_N, &temp, sizeof(float));
 
-                bitFlagSDINS |= 0x02;
+                bitFlagSDINS |= 0x0002;
                 
                 break;
+
+
 
             case 0x042 :
 
@@ -590,13 +591,218 @@ public :
                     can_msg_sdins.header.stamp = ros::Time::now();
                 }
 
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.WGS84_Alt, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0004;
+                
+                break;
+
+
+
+            case 0x043 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.NED_N, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0008;
+                
+                break;
+
+
+
+            case 0x044 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.NED_E, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0010;
+                
+                break;
+
+
+
+            case 0x045 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.NED_D, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0020;
+                
+                break;
+
+
+
+            case 0x046 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.VEL_N, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0040;
+                
+                break;
+
+
+
+            case 0x047 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.VEL_E, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0080;
+                
+                break;
+
+
+
+            case 0x048 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.VEL_D, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0100;
+                
+                break;
+
+
+
+            case 0x049 :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.ROLL, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0200;
+                
+                break;
+
+
+
+            case 0x04A :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.PITCH, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0400;
+                
+                break;
+
+
+
+            case 0x04B :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_sdins.YAW, &temp, sizeof(uint64_t));
+
+
+                bitFlagSDINS |= 0x0800;
+                
+                break;
+
+
+            case 0x04C :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
                 temp = big32(&message.DATA[0]);
-                memcpy(&can_msg_sdins.NED_E, &temp, sizeof(float));
+                memcpy(&can_msg_sdins.Uncertain_ROLL, &temp, sizeof(float));
 
                 temp = big32(&message.DATA[4]);
-                memcpy(&can_msg_sdins.NED_D, &temp, sizeof(float));
+                memcpy(&can_msg_sdins.Uncertain_PITCH, &temp, sizeof(float));
 
-                bitFlagSDINS |= 0x04;
+                bitFlagSDINS |= 0x1000;
+                
+                break;
+
+                
+
+            case 0x04D :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_sdins.Uncertain_YAW, &temp, sizeof(float));
+
+                temp = big32(&message.DATA[4]);
+                memcpy(&can_msg_sdins.Hori_Accuracy, &temp, sizeof(float));
+
+                bitFlagSDINS |= 0x2000;
+                
+                break;
+
+                
+
+            case 0x04E :
+
+                if (can_msg_sdins.header.stamp == bf_sdins)
+                {
+                    can_msg_sdins.header.stamp = ros::Time::now();
+                }
+
+                temp = big32(&message.DATA[0]);
+                memcpy(&can_msg_sdins.Vert_Accuracy, &temp, sizeof(float));
+
+
+                bitFlagSDINS |= 0x4000;
                 
                 break;
 
@@ -626,9 +832,9 @@ public :
                 can_msg_bestpos.header.stamp = bf_bestpos;
             }
 
-            if ( bitFlagSDINS == 0x07)
+            if ( bitFlagSDINS == 0x7FFF)
             {
-                bitFlagSDINS = 0x00;
+                bitFlagSDINS = 0x0000;
                 can_pub4.publish(can_msg_sdins);
                 can_msg_sdins.header.stamp = bf_sdins;   
 
