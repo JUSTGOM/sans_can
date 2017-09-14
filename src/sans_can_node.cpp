@@ -967,7 +967,54 @@ public :
 
                 break;
 
+
+            case 0x06A :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.roll, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0400;
+
+                break;
+
+            case 0x06B :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.pitch, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0800;
+
+                break;
+
+
+            case 0x06C :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.yaw, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x1000;
+
+                break;
+
+
+
             }
+
             
             
 
@@ -1003,7 +1050,7 @@ public :
 
             }
 
-            if ( bitFlagMPU == 0x03FF)
+            if ( bitFlagMPU == 0x1FFF)
             {
                 bitFlagMPU = 0x0000;
                 can_pub5.publish(can_msg_mpu9250);

@@ -10,4 +10,8 @@ float64 mx
 float64 my
 float64 mz
 float64 temperature
+float64 roll
+float64 pitch
+float64 yaw
+
 
