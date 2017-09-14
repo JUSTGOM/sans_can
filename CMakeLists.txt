@@ -17,6 +17,8 @@ add_message_files(
   sans_can_msgs_sdins.msg
   sans_can_msgs_vn300.msg
   sans_can_msgs_bestpos.msg
+  sans_can_msgs_mpu9250.msg
+
 )
 
 generate_messages(

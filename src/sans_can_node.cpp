@@ -3,6 +3,7 @@
 #include "sans_can/sans_can_msgs_sdins.h"
 #include "sans_can/sans_can_msgs_vn300.h"
 #include "sans_can/sans_can_msgs_bestpos.h"
+#include "sans_can/sans_can_msgs_mpu9250.h"
 #include <PCANBasic.h>
 #include <boost/thread.hpp>
 
@@ -22,6 +23,8 @@ public :
     ros::Publisher can_pub2;
     ros::Publisher can_pub3;
     ros::Publisher can_pub4;
+    ros::Publisher can_pub5;
+
 
 
     inline uint16_t big16(uint8_t *c)
@@ -93,12 +96,18 @@ public :
         TPCANMsg message;
         uint32_t temp = 0x00;
 
-        ros::Time bf_rtk = ros::Time::now(), bf_vn300 = ros::Time::now(), bf_bestpos = ros::Time::now(), bf_sdins = ros::Time::now();
+        ros::Time       bf_rtk = ros::Time::now(), 
+                        bf_vn300 = ros::Time::now(), 
+                        bf_bestpos = ros::Time::now(), 
+                        bf_sdins = ros::Time::now(),
+                        bf_mpu = ros::Time::now();
 
         static uint8_t  bitFlagM8P = 0x00;
         static uint16_t bitFlagVN300 = 0x0000;
         static uint8_t  bitFlagBESTPOS = 0x00;
         static uint16_t bitFlagSDINS = 0x0000;
+        static uint16_t bitFlagMPU = 0x0000;
+
 
         // ================== end mapping ==================
 
@@ -805,10 +814,164 @@ public :
                 bitFlagSDINS |= 0x4000;
                 
                 break;
+                /** @Novatel End *///////////////////////////////////////////////////
+
+
+
+            case 0x060 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.ax, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0001;
+
+                break;
+
+
+            case 0x061 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.ay, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0002;
+
+                break;
+
+
+            case 0x062 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.az, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0004;
+
+                break;
+
+
+            case 0x063 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.gx, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0008;
+
+                break;
+
+
+            case 0x064 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.gy, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0010;
+
+                break;
+
+
+            case 0x065 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.gz, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0020;
+
+                break;
+
+
+            case 0x066 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.mx, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0040;
+
+                break;
+
+
+            case 0x067 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.my, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0080;
+
+                break;
+
+
+            case 0x068 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.mz, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0100;
+
+                break;
+
+
+            case 0x069 :
+ 
+                if (can_msg_mpu9250.header.stamp == bf_mpu)
+                {
+                    can_msg_mpu9250.header.stamp = ros::Time::now();
+                }
+
+                temp = big64(&message.DATA[0]);
+                memcpy(&can_msg_mpu9250.temperature, &temp, sizeof(double));
+
+                bitFlagMPU |= 0x0200;
+
+                break;
 
             }
-            /** @Novatel End *///////////////////////////////////////////////////
             
+            
+
+
 
 
             if (bitFlagM8P == 0x1F)
@@ -840,6 +1003,13 @@ public :
 
             }
 
+            if ( bitFlagMPU == 0x03FF)
+            {
+                bitFlagMPU = 0x0000;
+                can_pub5.publish(can_msg_mpu9250);
+                can_msg_mpu9250.header.stamp = bf_mpu;
+            }
+
 
 
         }
@@ -853,6 +1023,8 @@ private :
     sans_can::sans_can_msgs_vn300       can_msg_vn300;
     sans_can::sans_can_msgs_bestpos     can_msg_bestpos;
     sans_can::sans_can_msgs_sdins       can_msg_sdins;
+    sans_can::sans_can_msgs_mpu9250     can_msg_mpu9250;
+
 
 public:
 
@@ -863,6 +1035,8 @@ public:
         can_pub2 = nh.advertise<sans_can::sans_can_msgs_vn300>("sans_can_msg_vn300", 1000);
         can_pub3 = nh.advertise<sans_can::sans_can_msgs_bestpos>("sans_can_msg_bestpos", 1000);
         can_pub4 = nh.advertise<sans_can::sans_can_msgs_sdins>("sans_can_msg_sdins", 1000);
+        can_pub5 = nh.advertise<sans_can::sans_can_msgs_mpu9250>("sans_can_msg_mpu9250", 1000);
+
 
         InitCan(can_fd, can_fds, PCAN_USBBUS1);
 
