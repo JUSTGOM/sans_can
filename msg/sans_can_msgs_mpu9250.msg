@@ -1,17 +1,16 @@
 #NAV_MSGS
 Header header
-float64 ax
-float64 ay
-float64 az
-float64 gx
-float64 gy
-float64 gz
-float64 mx
-float64 my
-float64 mz
-float64 temperature
-float64 roll
-float64 pitch
-float64 yaw
+float32 ax
+float32 ay
+float32 az
+float32 gx
+float32 gy
+float32 gz
+float32 mx
+float32 my
+float32 mz
+float32 roll
+float32 pitch
+float32 yaw
 
 

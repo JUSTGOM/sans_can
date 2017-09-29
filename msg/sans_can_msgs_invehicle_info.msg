@@ -1,0 +1,30 @@
+#NAV_MSGS
+Header header
+float64 Gway_ENG_RPM
+float64 Gway_YAW_RATE
+float64 Gway_Lat_ACCEL
+float64 Gway_Lon_ACCEL
+float64 Gway_WHL_SPD_FL
+float64 Gway_WHL_SPD_FR
+float64 Gway_WHL_SPD_RL
+float64 Gway_WHL_SPD_RR
+uint8 GWay_GEAR
+uint8 Gway_PBREAKE_ACT
+float64 Gway_Throttle_POS
+float64 Gway_ACCEL_PEDAL_POS
+float64 Gway_Vehicle_Speed
+float64 Gway_SteeringWheel_ANG
+uint8 Gway_BRAKE_ACT
+uint8 Gway_Odometer_Left
+uint8 Gway_Odometer_Right
+float64 Gway_SteeringTq
+float64 Gway_CYL_PRES
+float64 Gway_GearSelDisp
+float64 Gway_RLY_AC
+float64 Gway_SteeringSpeed
+float64 Gway_EngTq
+float64 Gway_N_TC
+float64 Gway_SteeringWheel_Count
+float64 Gway_VehicleSpeed_High
+float64 Gway_VehicleSpeed_Low
+
