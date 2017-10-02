@@ -140,7 +140,7 @@ public :
 
 
             /** @C94-M8P Begin *///////////////////////////////////////////////////
-            case 0x001 :
+            case 0x00B :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
                 {
@@ -154,7 +154,7 @@ public :
 
                 break;
 
-            case 0x002 :
+            case 0x00C :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
                 {
@@ -170,7 +170,7 @@ public :
 
                 break;
 
-            case 0x003 :
+            case 0x00D :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
                 {
@@ -189,7 +189,7 @@ public :
 
                 break;
 
-            case 0x004 :
+            case 0x00E :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
                 {
@@ -203,7 +203,7 @@ public :
 
                 break;
 
-            case 0x005 :
+            case 0x00F :
 
                 if (can_msg_rtk.header.stamp == bf_rtk)
                 {
@@ -951,13 +951,12 @@ public :
                     can_msg_invehicle_info.header.stamp = ros::Time::now();
                 }
 
+                can_msg_invehicle_info.Gway_ENG_RPM =   ((uint16_t)((message.DATA[1] << 8) | (message.DATA[0] << 0)) * 0.25);			// rpm
+                can_msg_invehicle_info.Gway_YAW_RATE =  ((uint16_t)((message.DATA[3] << 8) | (message.DATA[2] << 0)) * 0.01) - 40.95;	// deg/s
+                can_msg_invehicle_info.Gway_Lat_ACCEL = ((uint16_t)((message.DATA[5] << 8) | (message.DATA[4] << 0)) * 0.01) - 10.23;	// m/s^2
+                can_msg_invehicle_info.Gway_Lon_ACCEL = ((uint16_t)((message.DATA[7] << 8) | (message.DATA[6] << 0)) * 0.01) - 10.23;	// m/s^2
+
                 bitFlagInveh |= 0x01;
-
-                can_msg_invehicle_info.Gway_ENG_RPM =   ((uint16_t)((message.DATA[0] << 8) | (message.DATA[1] << 0)) * 0.25);			// rpm
-                can_msg_invehicle_info.Gway_YAW_RATE =  ((uint16_t)((message.DATA[2] << 8) | (message.DATA[3] << 0)) * 0.01) - 40.95;	// deg/s
-                can_msg_invehicle_info.Gway_Lat_ACCEL = ((uint16_t)((message.DATA[4] << 8) | (message.DATA[5] << 0)) * 0.01) - 10.23;	// m/s^2
-                can_msg_invehicle_info.Gway_Lon_ACCEL = ((uint16_t)((message.DATA[6] << 8) | (message.DATA[7] << 0)) * 0.01) - 10.23;	// m/s^2
-
 
                 break;
 
@@ -968,12 +967,14 @@ public :
                     can_msg_invehicle_info.header.stamp = ros::Time::now();
                 }
 
+
+                can_msg_invehicle_info.Gway_WHL_SPD_FL = (uint16_t)((message.DATA[1] << 8) | (message.DATA[0] << 0)) * 0.03125;		// km/h
+                can_msg_invehicle_info.Gway_WHL_SPD_FR = (uint16_t)((message.DATA[3] << 8) | (message.DATA[2] << 0)) * 0.03125;		// km/h
+                can_msg_invehicle_info.Gway_WHL_SPD_RL = (uint16_t)((message.DATA[5] << 8) | (message.DATA[4] << 0)) * 0.03125;		// km/h
+                can_msg_invehicle_info.Gway_WHL_SPD_RR = (uint16_t)((message.DATA[7] << 8) | (message.DATA[6] << 0)) * 0.03125;		// km/h
+
                 bitFlagInveh |= 0x02;
 
-                can_msg_invehicle_info.Gway_WHL_SPD_FL = (uint16_t)((message.DATA[0] << 8) | (message.DATA[1] << 0)) * 0.03125;		// km/h
-                can_msg_invehicle_info.Gway_WHL_SPD_FR = (uint16_t)((message.DATA[2] << 8) | (message.DATA[3] << 0)) * 0.03125;		// km/h
-                can_msg_invehicle_info.Gway_WHL_SPD_RL = (uint16_t)((message.DATA[4] << 8) | (message.DATA[5] << 0)) * 0.03125;		// km/h
-                can_msg_invehicle_info.Gway_WHL_SPD_RR = (uint16_t)((message.DATA[6] << 8) | (message.DATA[7] << 0)) * 0.03125;		// km/h
                 break;
 
             case 0x102 :
@@ -983,14 +984,13 @@ public :
                     can_msg_invehicle_info.header.stamp = ros::Time::now();
                 }
 
-                bitFlagInveh |= 0x04;
 
                 can_msg_invehicle_info.GWay_GEAR                = (uint8_t)(message.DATA[0] & 0x07); // 0:N|P, 1:1st, 2:2nd, 3:3rd, 4:4th, 5:5th, 6:more than 6th, 7:reverse
                 can_msg_invehicle_info.Gway_PBREAKE_ACT         = (uint8_t)(message.DATA[0] & 0x08); // 0:Parking brake is not activated, 1:Parking brake is activated
                 can_msg_invehicle_info.Gway_Throttle_POS        = ((uint8_t)(message.DATA[1]) - 0x20) * (100/213); // %
                 can_msg_invehicle_info.Gway_ACCEL_PEDAL_POS     = (uint8_t)(message.DATA[2]) * 0.3906; // %
                 can_msg_invehicle_info.Gway_Vehicle_Speed       = (uint8_t)(message.DATA[3]) * 1.0; // km/h
-                can_msg_invehicle_info.Gway_SteeringWheel_ANG   = (int16_t)((message.DATA[4] << 8) | (message.DATA[5] << 0)) * 0.1; // deg
+                can_msg_invehicle_info.Gway_SteeringWheel_ANG   = (int16_t)((message.DATA[5] << 8) | (message.DATA[4] << 0)) * 0.1; // deg
                 can_msg_invehicle_info.Gway_BRAKE_ACT           = (uint8_t)(message.DATA[6] & 0x03);
                 // 0:EMS does not support this function,
                 // 1:Brake switch is not pressed (OFF),
@@ -998,6 +998,8 @@ public :
                 // 3:Brake switch failure
                 can_msg_invehicle_info.Gway_Odometer_Left = (uint8_t)(message.DATA[7] & 0x0F) * 1.0;							// meter
                 can_msg_invehicle_info.Gway_Odometer_Right = (uint8_t)(message.DATA[7] & 0xF0) * 1.0;							// meter
+
+                bitFlagInveh |= 0x04;
 
                 break;
 
@@ -1008,15 +1010,16 @@ public :
                     can_msg_invehicle_info.header.stamp = ros::Time::now();
                 }
 
-                bitFlagInveh |= 0x08;
 
-                can_msg_invehicle_info.Gway_SteeringTq      = ((uint16_t)((message.DATA[0] << 4) | (message.DATA[1] & 0x0F)) - 0x800) * 0.01;	// Nm
-                can_msg_invehicle_info.Gway_CYL_PRES        = (uint16_t)(((message.DATA[1] & 0x0F) << 8) | message.DATA[2]) * 0.1;			// bar
+                can_msg_invehicle_info.Gway_SteeringTq      = ((uint16_t)((message.DATA[0]) | ((message.DATA[1] & 0x0F) << 8)) - 0x800) * 0.01;	// Nm
+                can_msg_invehicle_info.Gway_CYL_PRES        = (uint16_t)((message.DATA[1] & 0xF0) | (message.DATA[2] << 4)) * 0.1;			// bar
                 can_msg_invehicle_info.Gway_GearSelDisp     = message.DATA[3] & 0x0F;												// 0:P, 1:L, 2:2, 3:3, 4:DS, 5:D, 6:N, 7:R, 8:Sports/Manual 9~16:생략
                 can_msg_invehicle_info.Gway_RLY_AC          = message.DATA[3] & 0x10;													// 0: A/C OFF, 1: A/C ON
                 can_msg_invehicle_info.Gway_SteeringSpeed   = (uint8_t)message.DATA[4] * 4.0;									//
                 can_msg_invehicle_info.Gway_EngTq           = (uint8_t)message.DATA[5] * 0.390625;										// %
-                can_msg_invehicle_info.Gway_N_TC            = (uint16_t)((message.DATA[6] << 8) | (message.DATA[7] << 0)) * 0.25;					// rpm
+                can_msg_invehicle_info.Gway_N_TC            = (uint16_t)((message.DATA[7] << 8) | (message.DATA[6] << 0)) * 0.25;					// rpm
+
+                bitFlagInveh |= 0x08;
 
                 break;
 
@@ -1027,15 +1030,13 @@ public :
                     can_msg_invehicle_info.header.stamp = ros::Time::now();
                 }
 
-                bitFlagInveh |= 0x10;
 
-                can_msg_invehicle_info.Gway_SteeringWheel_Count     = ((uint16_t)((message.DATA[0] << 8) | (message.DATA[1] << 0)) - 0x4000) * 2.0;	// degree
+                can_msg_invehicle_info.Gway_SteeringWheel_Count     = ((uint16_t)((message.DATA[1] << 8) | (message.DATA[0] << 0)) - 0x4000) * 2.0;	// degree
                 can_msg_invehicle_info.Gway_VehicleSpeed_High       = (uint8_t)message.DATA[2] * 1.0;											// km/h
                 can_msg_invehicle_info.Gway_VehicleSpeed_Low        = (uint8_t)message.DATA[3] / 128;												// km/h
 
-                break;
+                bitFlagInveh |= 0x10;
 
-            default :
                 break;
 
 
@@ -1083,7 +1084,7 @@ public :
 //                can_msg_mpu9250.header.stamp = bf_mpu;
 //            }
 
-            if (bitFlagInveh = 0x1F)
+            if (bitFlagInveh == 0x1F)
             {
                 bitFlagInveh = 0x00;
                 can_pub6.publish(can_msg_invehicle_info);
@@ -1111,7 +1112,7 @@ public:
 
     CANNode(ros::NodeHandle _nh)
     {
-        can_pub1 = nh.advertise<sans_can::sans_can_msgs_rtk>("sans_can_msg_rtk", 1000);
+        can_pub1 = nh.advertise<sans_can::sans_can_msgs_rtk>("sans_can_msg_rtk", 10);
         can_pub2 = nh.advertise<sans_can::sans_can_msgs_vn300>("sans_can_msg_vn300", 1000);
         //can_pub3 = nh.advertise<sans_can::sans_can_msgs_bestpos>("sans_can_msg_bestpos", 1000);
         //can_pub4 = nh.advertise<sans_can::sans_can_msgs_sdins>("sans_can_msg_sdins", 1000);
